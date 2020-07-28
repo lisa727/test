@@ -1,1 +1,1 @@
-web: python -m http://127.0.0.1:8000/
+web: python -m http.server $PORT
