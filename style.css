@@ -1,0 +1,41 @@
+body {
+	font-family: 'Lato', arial, sans-serif;
+    color: #434343;
+    background: #DAE3E7;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+}
+
+.intro {
+background-color: #FFFAFA;
+height:250px;
+margin-bottom: 5px; 
+border: 3px solid #696969;	
+}	
+img {
+height: 180px;
+border-radius: 50%;
+margin: 30px;
+}
+
+
+
+.pull-left {
+	float: left!important;
+}
+
+.profile {
+
+font-family: 'Lato', arial, sans-serif;
+color: #434343;
+width: 60%;
+float: left!important;
+}
+
+.am {
+margin-top: 55px;
+}
+
+.inf {
+border-top: 3px solid #696969
+}
