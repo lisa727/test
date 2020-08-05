@@ -1,10 +1,10 @@
 import os
 import socketserver
 
-
 from http.server import SimpleHTTPRequestHandler
+PORT = int(os.getenv("PORT", 8000))
 
-class MyHttp(SimpleHTTPRequestHandler):
+class MyHandler(SimpleHTTPRequestHandler):
     def do_GET(self):
         path = self.build_path()
 
@@ -50,3 +50,8 @@ class MyHttp(SimpleHTTPRequestHandler):
             result = f"{result}/"
 
         return result
+
+if __name__ == "__main__":
+    with socketserver.TCPServer(("", PORT), MyHandler) as httpd:
+        print("it" + " works")
+        httpd.serve_forever(poll_interval=1)
