@@ -1,5 +1,7 @@
 import os
 import socketserver
+import settings
+
 
 from http.server import SimpleHTTPRequestHandler
 PORT = int(os.getenv("PORT", 8000))
@@ -12,11 +14,35 @@ class MyHandler(SimpleHTTPRequestHandler):
             self.handle_root()
         elif path == "/hello/":
             self.handle_hello()
+        elif path == "/style/":
+            self.handle_style()
+        elif path == "/image/":
+            self.handle_image()
         else:
             self.handle_404()
 
     def handle_root(self):
         return super().do_GET()
+
+    def handle_style(self):
+        css_file = settings.PROGECT_DIR/ "style" / "style.css"
+        if not css_file.exists():
+            return self.handle_404()
+
+        with css_file.open("r") as fp:
+            css = fp.read()
+
+
+        self.respond(css, content_type="text/css")
+
+    def handle_image(self):
+        image_file = settings.PROGECT_DIR/ "images" / "kit.jpg"
+        if not image_file.exists():
+            return self.handle_404()
+        with image_file.open("rb") as fp:
+            img = fp.read()
+
+        self.respond(img, content_type="image/jpg")
 
     def handle_hello(self):
         content = f"""
@@ -41,7 +67,13 @@ class MyHandler(SimpleHTTPRequestHandler):
         self.send_header("Content-type", content_type)
         self.send_header("Content-length", str(len(message)))
         self.end_headers()
+
+        if isinstance(message,str):
+            message = message.encode()
+
         self.wfile.write(message.encode())
+
+
 
     def build_path(self) -> str:
         result = self.path
