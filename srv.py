@@ -36,7 +36,7 @@ class MyHandler(SimpleHTTPRequestHandler):
         self.respond(css, content_type="text/css")
 
     def handle_image(self):
-        image_file = settings.PROGECT_DIR/ "images" / "kit.jpg"
+        image_file = settings.PROGECT_DIR/ "pictures" / "kit.jpg"
         if not image_file.exists():
             return self.handle_404()
         with image_file.open("rb") as fp:
