@@ -25,7 +25,7 @@ class MyHandler(SimpleHTTPRequestHandler):
         return super().do_GET()
 
     def handle_style(self):
-        css_file = settings.PROGECT_DIR/ "style" / "style.css"
+        css_file = settings.PROGECT_DIR/ "style.css"
         if not css_file.exists():
             return self.handle_404()
 
@@ -42,7 +42,7 @@ class MyHandler(SimpleHTTPRequestHandler):
         with image_file.open("rb") as fp:
             img = fp.read()
 
-        self.respond(img, content_type="image/jpg")
+        self.respond(img, content_type="image/jpeg")
 
     def handle_hello(self):
         content = f"""
