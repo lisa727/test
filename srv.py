@@ -4,11 +4,14 @@ import settings
 
 
 from http.server import SimpleHTTPRequestHandler
+
+from utils import normalize_path
+
 PORT = int(os.getenv("PORT", 8000))
 
 class MyHandler(SimpleHTTPRequestHandler):
     def do_GET(self):
-        path = self.build_path()
+        path = normalize_path(self.path)
 
         if path == "/":
             self.handle_root()
@@ -74,13 +77,7 @@ class MyHandler(SimpleHTTPRequestHandler):
 
 
 
-    def build_path(self) -> str:
-        result = self.path
 
-        if result[-1] != "/":
-            result = f"{result}/"
-
-        return result
 
 if __name__ == "__main__":
     with socketserver.TCPServer(("", PORT), MyHandler) as httpd:
