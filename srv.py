@@ -1,15 +1,12 @@
-import os
-import socketserver
-import settings
 
+import settings
 
 from http.server import SimpleHTTPRequestHandler
 
-from utils import normalize_path
+from utils import normalize_path, to_bytes
 
-PORT = int(os.getenv("PORT", 8000))
 
-class MyHandler(SimpleHTTPRequestHandler):
+class MyHttp(SimpleHTTPRequestHandler):
     def do_GET(self):
         path = normalize_path(self.path)
 
@@ -28,7 +25,7 @@ class MyHandler(SimpleHTTPRequestHandler):
         return super().do_GET()
 
     def handle_style(self):
-        css_file = settings.PROGECT_DIR / "style.css"
+        css_file = settings.PROJECT_DIR / "style.css"
         if not css_file.exists():
             return self.handle_404()
 
@@ -38,7 +35,7 @@ class MyHandler(SimpleHTTPRequestHandler):
         self.respond(css, content_type="text/css")
 
     def handle_image(self):
-        image_file = settings.PROGECT_DIR / "pictures" / "kit.jpg"
+        image_file = settings.PROJECT_DIR / "pictures" / "kit.jpg"
         if not image_file.exists():
             return self.handle_404()
         with image_file.open("rb") as fp:
@@ -65,21 +62,12 @@ class MyHandler(SimpleHTTPRequestHandler):
         self.respond(msg, code=404, content_type="text/plain")
 
     def respond(self, message, code=200, content_type="text/html"):
+
+        payload = to_bytes(message)
+
         self.send_response(code)
         self.send_header("Content-type", content_type)
-        self.send_header("Content-length", str(len(message)))
+        self.send_header("Content-length", str(len(payload)))
         self.end_headers()
 
-        if isinstance(message,str):
-            message = message.encode()
-
-        self.wfile.write(message)
-
-
-
-
-
-if __name__ == "__main__":
-    with socketserver.TCPServer(("", PORT), MyHandler) as httpd:
-        print("it" + " works")
-        httpd.serve_forever(poll_interval=1)
+        self.wfile.write(payload)
